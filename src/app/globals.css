@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Simplified Gear Animation */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 30s linear infinite;
+}
+
+/* Simplified Gear Teeth */
+.gear-teeth {
+  position: absolute;
+  inset: -8px;
+  border: 8px dashed theme('colors.racing-red');
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+/* Particle Effects */
+.particles {
+  background-image: 
+    radial-gradient(circle at center, theme('colors.racing-red') 1px, transparent 1px),
+    radial-gradient(circle at center, theme('colors.racing-red') 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  animation: particleMove 8s linear infinite;
+  opacity: 0.1;
+}
+
+@keyframes particleMove {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-40px);
+  }
+}
+
+/* Add some glow effects */
+.text-glow {
+  text-shadow: 0 0 10px theme('colors.racing-red');
+} 
