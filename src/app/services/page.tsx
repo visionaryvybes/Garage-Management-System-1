@@ -64,16 +64,26 @@ export default function ServicesPage() {
       }
 
       // Transform the data to match our expected format
-      const transformedServices = servicesData?.map(service => ({
-        ...service,
-        vehicles: service.vehicle ? {
-          id: service.vehicle.id,
-          make: service.vehicle.make,
-          model: service.vehicle.model,
-          license_plate: service.vehicle.license_plate,
-          image_url: service.vehicle.image_url
-        } : undefined
-      })) || [];
+      const transformedServices = servicesData?.map(service => {
+        const vehicleData = service.vehicle as {
+          id: number;
+          make: string;
+          model: string;
+          license_plate: string;
+          image_url?: string;
+        } | null;
+
+        return {
+          ...service,
+          vehicles: vehicleData ? {
+            id: vehicleData.id,
+            make: vehicleData.make,
+            model: vehicleData.model,
+            license_plate: vehicleData.license_plate,
+            image_url: vehicleData.image_url
+          } : undefined
+        };
+      }) || [];
 
       console.log('Transformed services:', transformedServices);
       setServices(transformedServices as Service[]);
