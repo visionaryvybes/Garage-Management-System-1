@@ -18,18 +18,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         <div className="min-h-screen relative">
-          {/* Background Image */}
+          {/* Background Image with gradient overlay */}
           <div 
-            className="fixed inset-0"
+            className="fixed inset-0 bg-gradient-to-b from-black/50 to-black/70"
             style={{
               backgroundImage: 'url(/garage-bg.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundAttachment: 'fixed',
+              backgroundBlendMode: 'overlay',
             }}
           />
-          {/* Dark overlay for better text visibility */}
-          <div className="fixed inset-0 bg-black bg-opacity-50" />
           {/* Content container */}
           <div className="relative z-20 text-white">
             {children}
