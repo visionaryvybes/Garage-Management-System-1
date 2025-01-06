@@ -1,102 +1,57 @@
 # Garage Management System
 
-A full-stack application for managing a garage business, including vehicle service tracking, appointments, inventory, and billing.
+A modern web application for managing garage operations, built with Next.js and Supabase.
 
 ## Features
 
-- Dashboard with real-time updates
-- User authentication (admin, mechanic, customer)
-- Vehicle service tracking
-- Appointment scheduling
-- Inventory management
-- Billing and invoicing
-- Notification system
-- Reports generation
+- Vehicle Management
+- Service Records
+- Customer Management
+- Real-time Updates
+- Responsive Design
 
 ## Tech Stack
 
-- Frontend: React
-- Backend: Node.js, Express
-- Database: MongoDB
-- Real-time updates: Socket.io
+- Frontend: Next.js 14
+- Database: Supabase
+- Authentication: Supabase Auth
+- Styling: Tailwind CSS
 
 ## Project Structure
 
 ```
 garage-management-system/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── services/      # API services
-│   │   └── utils/         # Utility functions
-│   └── package.json
-├── server/                 # Node.js backend
-│   ├── config/            # Configuration files
-│   ├── controllers/       # Route controllers
-│   ├── models/           # MongoDB models
-│   ├── routes/           # API routes
-│   ├── middleware/       # Custom middleware
-│   └── server.js         # Main server file
-└── README.md
+│
+├── src/
+│   ├── app/              # Next.js app directory
+│   ├── components/       # React components
+│   ├── lib/             # Utility functions
+│   └── types/           # TypeScript types
+│
+├── public/              # Static files
+│
+└── package.json         # Project dependencies
 ```
 
-## Setup Instructions
+## Environment Variables
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+## Getting Started
 
 1. Clone the repository
-2. Install dependencies:
-   ```bash
-   # Install backend dependencies
-   cd server
-   npm install
-
-   # Install frontend dependencies
-   cd ../client
-   npm install
-   ```
-
-3. Set up environment variables:
-   Create `.env` file in server directory with:
-   ```
-   MONGODB_URI=your_mongodb_uri
-   PORT=5000
-   JWT_SECRET=your_jwt_secret
-   ```
-
-4. Start the application:
-   ```bash
-   # Start backend server
-   cd server
-   npm run dev
-
-   # Start frontend (in a new terminal)
-   cd client
-   npm start
-   ```
-
-5. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-
-## API Endpoints
-
-- `/api/auth`: Authentication routes
-- `/api/vehicles`: Vehicle management
-- `/api/appointments`: Appointment scheduling
-- `/api/inventory`: Inventory management
-- `/api/services`: Service records
-- `/api/invoices`: Billing and invoices
-- `/api/notifications`: Notification system
-- `/api/parts`: Parts management
-- `/api/dashboard`: Dashboard data
-- `/api/reports`: Report generation
+2. Install dependencies: `npm install`
+3. Set up environment variables
+4. Run development server: `npm run dev`
 
 ## Deployment
 
-1. Deploy the backend to a Node.js hosting service
-2. Deploy the frontend to Vercel or similar
-3. Set up MongoDB Atlas for the database
-4. Configure environment variables in your hosting platform
+The application can be easily deployed on Vercel:
 
-## License
-
-MIT License 
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Add environment variables
+4. Deploy 
