@@ -1,9 +1,8 @@
 import React from 'react'
 import './globals.css'
-import { Inter } from 'next/font/google'
-import Image from 'next/image'
+import { Montserrat } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Garage Management System',
@@ -17,21 +16,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={montserrat.className}>
         <div className="min-h-screen relative">
           {/* Background Image */}
-          <Image
-            src="/garage-bg.jpg"
-            alt="Garage Background"
-            fill
-            priority
-            className="object-cover"
-            quality={100}
+          <div 
+            className="fixed inset-0"
+            style={{
+              backgroundImage: 'url(/garage-bg.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundAttachment: 'fixed',
+            }}
           />
-          {/* Dark overlay for better readability */}
-          <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+          {/* Dark overlay for better text visibility */}
+          <div className="fixed inset-0 bg-black bg-opacity-50" />
           {/* Content container */}
-          <div className="relative z-20">
+          <div className="relative z-20 text-white">
             {children}
           </div>
         </div>

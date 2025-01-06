@@ -2,12 +2,16 @@
 
 import React, { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Vehicle } from '@/app/types'
+import { Vehicle, Image } from '@/app/types'
 import AddVehicleModal from '@/app/components/AddVehicleModal'
 import { PlusIcon } from '@heroicons/react/24/outline'
 
+interface VehicleWithImage extends Vehicle {
+  images: Image[]
+}
+
 export default function DashboardPage() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+  const [vehicles, setVehicles] = useState<VehicleWithImage[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
@@ -19,7 +23,14 @@ export default function DashboardPage() {
     try {
       const { data, error } = await supabase
         .from('vehicles')
-        .select('*')
+        .select(`
+          *,
+          images (
+            id,
+            url,
+            type
+          )
+        `)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -75,6 +86,9 @@ export default function DashboardPage() {
                 <thead className="bg-oil-light">
                   <tr>
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-metal-300 sm:pl-6">
+                      Image
+                    </th>
+                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-metal-300 sm:pl-6">
                       Vehicle
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-metal-300">
@@ -91,6 +105,19 @@ export default function DashboardPage() {
                 <tbody className="divide-y divide-metal-700 bg-oil-dark">
                   {vehicles.map((vehicle) => (
                     <tr key={vehicle.id} className="hover:bg-metal-800 cursor-pointer">
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-metal-300 sm:pl-6">
+                        {vehicle.images && vehicle.images[0] ? (
+                          <img
+                            src={vehicle.images[0].url}
+                            alt={`${vehicle.make} ${vehicle.model}`}
+                            className="h-12 w-16 object-cover rounded"
+                          />
+                        ) : (
+                          <div className="h-12 w-16 bg-metal-800 rounded flex items-center justify-center">
+                            <span className="text-xs text-metal-500">No image</span>
+                          </div>
+                        )}
+                      </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-metal-300 sm:pl-6">
                         {vehicle.year} {vehicle.make} {vehicle.model}
                       </td>

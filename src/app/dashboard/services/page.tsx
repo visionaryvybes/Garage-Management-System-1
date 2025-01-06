@@ -2,16 +2,17 @@
 
 import React, { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Service, Vehicle } from '@/app/types'
+import { Service, Vehicle, Image } from '@/app/types'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import AddServiceModal from '@/app/components/AddServiceModal'
 
-interface ServiceWithVehicle extends Service {
+interface ServiceWithDetails extends Service {
   vehicle: Vehicle
+  images: Image[]
 }
 
 export default function ServicesPage() {
-  const [services, setServices] = useState<ServiceWithVehicle[]>([])
+  const [services, setServices] = useState<ServiceWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
@@ -25,7 +26,12 @@ export default function ServicesPage() {
         .from('services')
         .select(`
           *,
-          vehicle:vehicles(*)
+          vehicle:vehicles(*),
+          images (
+            id,
+            url,
+            type
+          )
         `)
         .order('created_at', { ascending: false })
 
@@ -82,6 +88,9 @@ export default function ServicesPage() {
                 <thead className="bg-oil-light">
                   <tr>
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-metal-300 sm:pl-6">
+                      Image
+                    </th>
+                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-metal-300 sm:pl-6">
                       Vehicle
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-metal-300">
@@ -101,6 +110,19 @@ export default function ServicesPage() {
                 <tbody className="divide-y divide-metal-700 bg-oil-dark">
                   {services.map((service) => (
                     <tr key={service.id} className="hover:bg-metal-800 cursor-pointer">
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-metal-300 sm:pl-6">
+                        {service.images && service.images[0] ? (
+                          <img
+                            src={service.images[0].url}
+                            alt={`Service for ${service.vehicle.make} ${service.vehicle.model}`}
+                            className="h-12 w-16 object-cover rounded"
+                          />
+                        ) : (
+                          <div className="h-12 w-16 bg-metal-800 rounded flex items-center justify-center">
+                            <span className="text-xs text-metal-500">No image</span>
+                          </div>
+                        )}
+                      </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-metal-300 sm:pl-6">
                         {service.vehicle.year} {service.vehicle.make} {service.vehicle.model}
                       </td>

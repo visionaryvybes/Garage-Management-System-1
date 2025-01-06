@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Vehicle } from '@/app/types'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import ImageUpload from './ImageUpload'
 
 interface AddVehicleModalProps {
   isOpen: boolean
@@ -14,6 +15,7 @@ interface AddVehicleModalProps {
 export default function AddVehicleModal({ isOpen, onClose, onVehicleAdded }: AddVehicleModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     make: '',
     model: '',
@@ -30,10 +32,8 @@ export default function AddVehicleModal({ isOpen, onClose, onVehicleAdded }: Add
     setError(null)
 
     try {
-      // Log the data being sent
-      console.log('Sending vehicle data:', { ...formData, status: 'pending' })
-
-      const { data, error: supabaseError } = await supabase
+      // Insert vehicle
+      const { data: vehicleData, error: vehicleError } = await supabase
         .from('vehicles')
         .insert([
           {
@@ -43,12 +43,23 @@ export default function AddVehicleModal({ isOpen, onClose, onVehicleAdded }: Add
         ])
         .select()
 
-      if (supabaseError) {
-        console.error('Supabase error:', supabaseError)
-        throw new Error(supabaseError.message)
+      if (vehicleError) throw vehicleError
+
+      // If we have an image, insert it into the images table
+      if (imageUrl && vehicleData?.[0]?.id) {
+        const { error: imageError } = await supabase
+          .from('images')
+          .insert([
+            {
+              vehicle_id: vehicleData[0].id,
+              url: imageUrl,
+              type: 'vehicle'
+            }
+          ])
+
+        if (imageError) throw imageError
       }
 
-      console.log('Success! Vehicle added:', data)
       onVehicleAdded()
       onClose()
       setFormData({
@@ -60,6 +71,7 @@ export default function AddVehicleModal({ isOpen, onClose, onVehicleAdded }: Add
         owner_phone: '',
         notes: ''
       })
+      setImageUrl(null)
     } catch (error: any) {
       console.error('Detailed error:', error)
       setError(error.message || 'Error adding vehicle. Please try again.')
@@ -90,6 +102,24 @@ export default function AddVehicleModal({ isOpen, onClose, onVehicleAdded }: Add
             </div>
           )}
           <form className="mt-4 space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium text-metal-300">Vehicle Image</label>
+              <div className="mt-1">
+                <ImageUpload
+                  onUploadComplete={(url) => setImageUrl(url)}
+                  type="vehicle"
+                />
+              </div>
+              {imageUrl && (
+                <div className="mt-2">
+                  <img
+                    src={imageUrl}
+                    alt="Vehicle preview"
+                    className="h-32 w-full object-cover rounded-md"
+                  />
+                </div>
+              )}
+            </div>
             <div>
               <label className="block text-sm font-medium text-metal-300">Make</label>
               <input
